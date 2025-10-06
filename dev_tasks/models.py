@@ -16,7 +16,7 @@ class Position(models.Model):
 
 
 class Worker(AbstractUser):
-    position = models.ForeignKey(Position, on_delete=models.CASCADE, related_name='workers')
+    position = models.ForeignKey(Position, on_delete=models.CASCADE, null=True, related_name='workers')
 
     class Meta:
         verbose_name = "worker"
@@ -37,6 +37,7 @@ class Task(models.Model):
     name = models.CharField(max_length=100, unique=True)
     description = models.TextField()
     deadline = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
     is_completed = models.BooleanField(default=False)
     priority = models.CharField(max_length=10, choices=PRIORITY_CHOICES, default="Medium")
     task_type = models.ForeignKey(TaskType, on_delete=models.SET_NULL, null=True, related_name='tasks')
