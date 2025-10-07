@@ -37,7 +37,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "dev_tasks"
+    "dev_tasks",
+    "django_adminlte3",
+    "django_adminlte3.theme",
 ]
 
 MIDDLEWARE = [
