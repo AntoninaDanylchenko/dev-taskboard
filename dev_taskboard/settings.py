@@ -31,6 +31,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "django_adminlte3",
+    "django_adminlte3.theme",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -38,8 +40,6 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "dev_tasks",
-    "django_adminlte3",
-    "django_adminlte3.theme",
 ]
 
 MIDDLEWARE = [
