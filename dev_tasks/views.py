@@ -10,13 +10,14 @@ def index(request: HttpRequest) -> HttpResponse:
     total = tasks.count()
     done = tasks.filter(is_completed=True).count()
     in_progress = tasks.filter(is_completed=False, deadline__gte=timezone.now()).count()
-    overdue = tasks.filter(is_completed=True, deadline__lt=timezone.now()).count()
+    overdue = tasks.filter(is_completed=False, deadline__lt=timezone.now()).count()
     context = {
-        "tasks": tasks,
         "total": total,
         "done": done,
         "in_progress": in_progress,
         "overdue": overdue,
+        "recent_tasks": tasks,
+        "now": timezone.now(),
     }
     return render(
         request, "dev_tasks/index.html", context=context)
