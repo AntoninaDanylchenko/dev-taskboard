@@ -3,124 +3,124 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
-<div class="content-wrapper">
-  <section class="content-header">
-    <div class="container-fluid">
-      <div class="row mb-2">
-        <div class="col-sm-6">
-          <h1>Welcome, {{ user.first_name|default:user.username }} 👋</h1>
-          <p class="text-muted">Here’s an overview of your current tasks.</p>
+  <div class="content-wrapper">
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Welcome, {{ user.first_name|default:user.username }} 👋</h1>
+            <p class="text-muted">Here’s an overview of your current tasks.</p>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section class="content">
-    <div class="container-fluid">
+    <section class="content">
+      <div class="container-fluid">
 
-      <div class="row">
+        <div class="row">
 
-        <div class="col-lg-3 col-6">
-          <div class="small-box bg-primary">
-            <div class="inner">
-              <h3>{{ total }}</h3>
-              <p>Total Tasks</p>
-            </div>
-            <div class="icon">
-              <i class="fas fa-tasks"></i>
+          <div class="col-lg-3 col-6">
+            <div class="small-box bg-primary">
+              <div class="inner">
+                <h3>{{ total }}</h3>
+                <p>Total Tasks</p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-tasks"></i>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="col-lg-3 col-6">
-          <div class="small-box bg-success">
-            <div class="inner">
-              <h3>{{ done }}</h3>
-              <p>Completed</p>
-            </div>
-            <div class="icon">
-              <i class="fas fa-check-circle"></i>
+          <div class="col-lg-3 col-6">
+            <div class="small-box bg-success">
+              <div class="inner">
+                <h3>{{ done }}</h3>
+                <p>Completed</p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-check-circle"></i>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="col-lg-3 col-6">
-          <div class="small-box bg-warning">
-            <div class="inner">
-              <h3>{{ in_progress }}</h3>
-              <p>In Progress</p>
-            </div>
-            <div class="icon">
-              <i class="fas fa-spinner"></i>
+          <div class="col-lg-3 col-6">
+            <div class="small-box bg-warning">
+              <div class="inner">
+                <h3>{{ in_progress }}</h3>
+                <p>In Progress</p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-spinner"></i>
+              </div>
             </div>
           </div>
+
+          <div class="col-lg-3 col-6">
+            <div class="small-box bg-danger">
+              <div class="inner">
+                <h3>{{ overdue }}</h3>
+                <p>Overdue</p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-exclamation-triangle"></i>
+              </div>
+            </div>
+          </div>
+
         </div>
 
-        <div class="col-lg-3 col-6">
-          <div class="small-box bg-danger">
-            <div class="inner">
-              <h3>{{ overdue }}</h3>
-              <p>Overdue</p>
-            </div>
-            <div class="icon">
-              <i class="fas fa-exclamation-triangle"></i>
-            </div>
+        <div class="card mt-4">
+          <div class="card-header bg-dark text-white">
+            <h3 class="card-title"><i class="fas fa-list"></i> Your Recent Tasks</h3>
+          </div>
+          <div class="card-body">
+            {% if recent_tasks %}
+            <table class="table table-bordered table-striped">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Name</th>
+                  <th>Deadline</th>
+                  <th>Priority</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for task in recent_tasks %}
+                <tr>
+                  <td>{{ forloop.counter }}</td>
+                  <td>{{ task.name }}</td>
+                  <td>{{ task.deadline|date:"d M Y" }}</td>
+                  <td>
+                    {% if task.priority == "High" %}
+                      <span class="badge bg-danger">High</span>
+                    {% elif task.priority == "Medium" %}
+                      <span class="badge bg-warning">Medium</span>
+                    {% else %}
+                      <span class="badge bg-success">Low</span>
+                    {% endif %}
+                  </td>
+                  <td>
+                    {% if task.is_completed %}
+                      <span class="badge bg-success">Done</span>
+                    {% elif task.deadline < now %}
+                      <span class="badge bg-danger">Overdue</span>
+                    {% else %}
+                      <span class="badge bg-primary">In progress</span>
+                    {% endif %}
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+            {% else %}
+            <p class="text-muted">No tasks found.</p>
+            {% endif %}
           </div>
         </div>
 
       </div>
-
-      <div class="card mt-4">
-        <div class="card-header bg-dark text-white">
-          <h3 class="card-title"><i class="fas fa-list"></i> Your Recent Tasks</h3>
-        </div>
-        <div class="card-body">
-          {% if recent_tasks %}
-          <table class="table table-bordered table-striped">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Name</th>
-                <th>Deadline</th>
-                <th>Priority</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for task in recent_tasks %}
-              <tr>
-                <td>{{ forloop.counter }}</td>
-                <td>{{ task.name }}</td>
-                <td>{{ task.deadline|date:"d M Y" }}</td>
-                <td>
-                  {% if task.priority == "High" %}
-                    <span class="badge bg-danger">High</span>
-                  {% elif task.priority == "Medium" %}
-                    <span class="badge bg-warning">Medium</span>
-                  {% else %}
-                    <span class="badge bg-success">Low</span>
-                  {% endif %}
-                </td>
-                <td>
-                  {% if task.is_completed %}
-                    <span class="badge bg-success">Done</span>
-                  {% elif task.deadline < now %}
-                    <span class="badge bg-danger">Overdue</span>
-                  {% else %}
-                    <span class="badge bg-primary">In progress</span>
-                  {% endif %}
-                </td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-          {% else %}
-          <p class="text-muted">No tasks found.</p>
-          {% endif %}
-        </div>
-      </div>
-
-    </div>
-  </section>
-</div>
+    </section>
+  </div>
 {% endblock %}
