@@ -1,6 +1,7 @@
 from django.utils import timezone
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
+from django.views.generic import ListView
 
 from dev_tasks.models import Task
 
@@ -21,3 +22,30 @@ def index(request: HttpRequest) -> HttpResponse:
     }
     return render(
         request, "dev_tasks/index.html", context=context)
+
+
+class TaskListView(ListView):
+    model = Task
+    context_object_name = "tasks"
+    paginate_by = 10
+
+    def get_queryset(self):
+        tasks = Task.objects.all()
+        status = self.request.GET.get("status")
+        priority = self.request.GET.get("priority")
+        if status:
+            if status == "done":
+                tasks = tasks.filter(is_completed=True)
+            elif status == "overdue":
+                tasks = tasks.filter(is_completed=False, deadline__lt=timezone.now())
+            elif status == "progress":
+                tasks = tasks.filter(is_completed=False, deadline__gte=timezone.now())
+        if priority:
+            tasks = tasks.filter(priority=priority)
+
+        return tasks
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["now"] = timezone.now()
+        return context
