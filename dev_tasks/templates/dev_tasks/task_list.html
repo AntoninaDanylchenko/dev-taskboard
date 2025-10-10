@@ -4,16 +4,17 @@
 
 {% block content %}
   <div class="content-wrapper">
-
-    <section class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1><i class="fas fa-tasks"></i> All Tasks</h1>
+    {% block content-header %}
+      <section class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-6">
+              <h1><i class="fas fa-tasks"></i> All Tasks</h1>
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    {% endblock %}     
 
     <section class="content">
       <div class="container-fluid">

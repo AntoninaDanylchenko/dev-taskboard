@@ -54,6 +54,14 @@ class TaskListView(LoginRequiredMixin, ListView):
         context["now"] = timezone.now()
         return context
 
+
+class MyTaskListView(TaskListView):
+    template_name = "dev_tasks/my_task_list.html"
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.filter(assignees=self.request.user)
+
+
 class WorkerCreateView(CreateView):
     form_class = WorkerCreationForm
     template_name = "registration/signup.html"

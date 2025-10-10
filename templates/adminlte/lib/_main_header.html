@@ -16,8 +16,8 @@
         <i class="fas fa-user-circle"></i> {{ user.username }}
       </a>
       <div class="dropdown-menu dropdown-menu-right">
-        <a href="" class="dropdown-item">
-          <i class="fas fa-tasks"></i> My Tasks
+        <a href="{% url "dev-tasks:my-tasks-list" %}" class="dropdown-item">
+          <i class="fas fa-user-check"></i> My Tasks
         </a>
         <div class="dropdown-divider"></div>
         <form action="{% url 'logout' %}" method="post" class="d-inline">
