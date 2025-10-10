@@ -4,5 +4,16 @@
 {% block stylesheets %}
   {{ block.super }}
   <link rel="stylesheet" href="{% static "css/custom.css" %}">
+{% endblock %}
 
+{% block body %}
+  <body class="hold-transition sidebar-mini">
+    <div class="wrapper">
+      {% if request.user.is_authenticated %}
+        {% include "adminlte/lib/_main_sidebar.html" %}
+      {% endif %}
+        {% include "adminlte/lib/_main_header.html" %}
+      {% block content %}{% endblock %}
+    </div>
+  </body>
 {% endblock %}

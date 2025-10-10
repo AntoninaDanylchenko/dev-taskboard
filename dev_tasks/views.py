@@ -1,3 +1,5 @@
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils import timezone
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
@@ -5,7 +7,7 @@ from django.views.generic import ListView
 
 from dev_tasks.models import Task
 
-
+@login_required
 def index(request: HttpRequest) -> HttpResponse:
     tasks = Task.objects.all()
     total = tasks.count()
@@ -24,7 +26,7 @@ def index(request: HttpRequest) -> HttpResponse:
         request, "dev_tasks/index.html", context=context)
 
 
-class TaskListView(ListView):
+class TaskListView(LoginRequiredMixin, ListView):
     model = Task
     context_object_name = "tasks"
     paginate_by = 10

@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load crispy_forms_filters %}
+{% load static %}
+
+{% block title %}Sign In{% endblock %}
+
+{% block body %}
+<body class="hold-transition login-page"
+      style="background: linear-gradient(135deg, #4e73df 0%, #224abe 100%) !important;
+             min-height: 100vh; display: flex; align-items: center; justify-content: center; padding-top: 100px">
+  <div class="login-box" style="width: 400px;">
+
+
+    <div class="login-logo mb-3">
+      <h2 class="mt-2"><a href="/" style="color:white;"><b>Task</b>Manager</a></h2>
+      <p class="text-light" style="font-size:14px; letter-spacing:0.5px;">Organize. Prioritize. Deliver.</p>
+    </div>
+
+    <!-- Card -->
+    <div class="card shadow-lg" style="border-radius:1rem;">
+      <div class="card-body login-card-body p-4">
+
+        <p class="login-box-msg mb-4 text-center text-secondary">Sign in to start your session</p>
+
+        {% if form.errors %}
+          <div class="alert alert-danger" role="alert">
+            Invalid username or password. Please try again.
+          </div>
+        {% endif %}
+
+        <form method="post" action="{% url 'login' %}">
+          {% csrf_token %}
+          {{ form|crispy }}
+          <button type="submit" class="btn btn-block text-white mb-3"
+                  style="background: linear-gradient(45deg, #4e73df, #224abe); border:none; border-radius:8px;">
+            <i class="fas fa-sign-in-alt mr-1"></i> Sign In
+          </button>
+        </form>
+
+        <!-- Extra links -->
+        <p class="mb-0 text-center">
+          <a href="#" class="text-primary font-weight-bold">Don’t have an account? Register</a>
+        </p>
+
+      </div>
+    </div>
+  </div>
+</body>
+{% endblock %}
