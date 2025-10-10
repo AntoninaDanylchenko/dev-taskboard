@@ -1,10 +1,12 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse_lazy
 from django.utils import timezone
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
-from django.views.generic import ListView
+from django.views.generic import ListView, CreateView
 
+from dev_tasks.forms import WorkerCreationForm
 from dev_tasks.models import Task
 
 @login_required
@@ -51,3 +53,8 @@ class TaskListView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         context["now"] = timezone.now()
         return context
+
+class WorkerCreateView(CreateView):
+    form_class = WorkerCreationForm
+    template_name = "registration/signup.html"
+    success_url = reverse_lazy("login")
