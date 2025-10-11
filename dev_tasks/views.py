@@ -6,7 +6,7 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 from django.views.generic import ListView, CreateView, DetailView
 
-from dev_tasks.forms import WorkerCreationForm
+from dev_tasks.forms import WorkerCreationForm, TaskForm
 from dev_tasks.models import Task
 
 @login_required
@@ -64,6 +64,12 @@ class MyTaskListView(TaskListView):
 
 class TaskDetailView(LoginRequiredMixin, DetailView):
     model = Task
+
+
+class TaskCreateView(LoginRequiredMixin, CreateView):
+    model = Task
+    form_class = TaskForm
+    success_url = reverse_lazy("dev-tasks:task-list")
 
 
 class WorkerCreateView(CreateView):
