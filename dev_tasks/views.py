@@ -4,7 +4,7 @@ from django.urls import reverse_lazy
 from django.utils import timezone
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
-from django.views.generic import ListView, CreateView
+from django.views.generic import ListView, CreateView, DetailView
 
 from dev_tasks.forms import WorkerCreationForm
 from dev_tasks.models import Task
@@ -60,6 +60,10 @@ class MyTaskListView(TaskListView):
     def get_queryset(self):
         queryset = super().get_queryset()
         return queryset.filter(assignees=self.request.user)
+
+
+class TaskDetailView(LoginRequiredMixin, DetailView):
+    model = Task
 
 
 class WorkerCreateView(CreateView):

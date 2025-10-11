@@ -72,7 +72,7 @@
                   <tr>
                     <td>{{ forloop.counter }}</td>
                     <td>
-                      <a href="">
+                      <a href="{% url "dev-tasks:task-detail" pk=task.id %}">
                         {{ task.name }}
                       </a>
                     </td>
