@@ -1,10 +1,10 @@
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
-from django.views.generic import ListView, CreateView, DetailView
+from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
 
 from dev_tasks.forms import WorkerCreationForm, TaskForm
 from dev_tasks.models import Task
@@ -65,6 +65,24 @@ class MyTaskListView(TaskListView):
 class TaskDetailView(LoginRequiredMixin, DetailView):
     model = Task
 
+
+class TaskUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Task
+    form_class = TaskForm
+    success_url = reverse_lazy("dev-tasks:tasks-list")
+    template_name = "dev_tasks/task_form.html"
+
+    def test_func(self):
+        return self.request.user.is_staff or self.request.user.is_superuser
+
+
+class TaskDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Task
+    success_url = reverse_lazy("dev-tasks:tasks-list")
+    template_name = "dev_tasks/task_delete.html"
+
+    def test_func(self):
+        return self.request.user.is_staff or self.request.user.is_superuser
 
 class TaskCreateView(LoginRequiredMixin, CreateView):
     model = Task
