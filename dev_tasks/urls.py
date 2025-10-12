@@ -9,6 +9,7 @@ from dev_tasks.views import (index,
                              TaskCreateView,
                              WorkerListView,
                              WorkerDetailView,
+                             AboutMeDetailView,
                              WorkerCreateView)
 
 
@@ -22,8 +23,8 @@ urlpatterns = [
     path("tasks/create/", TaskCreateView.as_view(), name="task-create"),
     path("workers/", WorkerListView.as_view(), name="workers-list"),
     path("workers/<int:pk>", WorkerDetailView.as_view(), name="worker-detail"),
+    path("about-me/", AboutMeDetailView.as_view(), name="about-me"),
     path("signup/", WorkerCreateView.as_view(), name="signup"),
-
 ]
 
 app_name = "dev-tasks"

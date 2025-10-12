@@ -130,6 +130,12 @@ class WorkerDetailView(LoginRequiredMixin, DetailView):
         return context
 
 
+class AboutMeDetailView( WorkerDetailView):
+    template_name = "dev_tasks/worker_detail.html"
+    def get_object(self, queryset=None):
+        return self.request.user
+
+
 class WorkerCreateView(CreateView):
     form_class = WorkerCreationForm
     template_name = "registration/signup.html"
