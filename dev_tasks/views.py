@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
@@ -7,8 +8,10 @@ from django.shortcuts import render
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
 
 from dev_tasks.forms import WorkerCreationForm, TaskForm
-from dev_tasks.models import Task
+from dev_tasks.models import Task, Worker
 
+
+User = get_user_model()
 @login_required
 def index(request: HttpRequest) -> HttpResponse:
     tasks = Task.objects.all()
@@ -57,6 +60,7 @@ class TaskListView(LoginRequiredMixin, ListView):
 
 class MyTaskListView(TaskListView):
     template_name = "dev_tasks/my_task_list.html"
+
     def get_queryset(self):
         queryset = super().get_queryset()
         return queryset.filter(assignees=self.request.user)
@@ -88,6 +92,13 @@ class TaskCreateView(LoginRequiredMixin, CreateView):
     model = Task
     form_class = TaskForm
     success_url = reverse_lazy("dev-tasks:task-list")
+
+
+class WorkerListView(LoginRequiredMixin, ListView):
+    model = User
+    context_object_name = "workers"
+    paginate_by = 10
+
 
 
 class WorkerCreateView(CreateView):
