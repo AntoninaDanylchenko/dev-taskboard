@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Team Member Details{% endblock %}
+
+{% block content %}
+<div class="content-wrapper">
+
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2 align-items-center">
+        <div class="col-sm-6">
+          <h1><i class="fas fa-user"></i> Team Member</h1>
+        </div>
+        <div class="col-sm-6 text-right">
+          <a href="{% url "dev-tasks:workers-list" %}" class="btn btn-outline-primary btn-sm">
+            <i class="fas fa-arrow-left"></i> Back to Team
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="content">
+    <div class="container-fluid">
+
+      <div class="card card-outline card-primary shadow-sm">
+        <div class="card-body">
+
+          <div class="row">
+            <div class="col-md-3 text-center mb-3">
+              <i class="fas fa-user-circle fa-6x text-primary"></i>
+            </div>
+            <div class="col-md-9">
+              <h3>{{ worker.first_name }} {{ worker.last_name }}</h3>
+              <p class="text-muted mb-1">
+                <strong>Username:</strong> {{ worker.username }}
+              </p>
+              <p class="text-muted mb-1">
+                <strong>Position:</strong> {{ worker.position.name }}
+              </p>
+              <hr>
+              <p>
+                <span class="badge bg-success">
+                  Completed tasks: {{ completed_tasks_count }}
+                </span>
+                <span class="badge bg-warning text-dark">
+                  Active tasks: {{ active_tasks_count }}
+                </span>
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="card card-outline card-secondary mt-3">
+        <div class="card-header">
+          <h3 class="card-title mb-0"><i class="fas fa-tasks"></i> Assigned Tasks</h3>
+        </div>
+
+        <div class="card-body p-0">
+          {% if worker.tasks.all %}
+            <table class="table table-striped mb-0">
+              <thead class="thead-dark">
+                <tr>
+                  <th>#</th>
+                  <th>Task</th>
+                  <th>Priority</th>
+                  <th>Deadline</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for task in worker.tasks.all %}
+                  <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>
+                      <a href="{% url 'dev-tasks:task-detail' pk=task.id %}">
+                        {{ task.name }}
+                      </a>
+                    </td>
+                    <td>
+                      {% if task.priority == "High" %}
+                        <span class="badge bg-danger">High</span>
+                      {% elif task.priority == "Medium" %}
+                        <span class="badge bg-warning text-dark">Medium</span>
+                      {% else %}
+                        <span class="badge bg-success">Low</span>
+                      {% endif %}
+                    </td>
+                    <td>{{ task.deadline|date:"d M Y" }}</td>
+                    <td>
+                      {% if task.is_completed %}
+                        <span class="badge bg-success">Done</span>
+                      {% elif task.deadline < now %}
+                        <span class="badge bg-danger">Overdue</span>
+                      {% else %}
+                        <span class="badge bg-primary">In Progress</span>
+                      {% endif %}
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          {% else %}
+            <div class="p-3 text-muted text-center">No tasks assigned.</div>
+          {% endif %}
+        </div>
+      </div>
+
+    </div>
+  </section>
+</div>
+{% endblock %}

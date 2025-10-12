@@ -117,6 +117,19 @@ class WorkerListView(LoginRequiredMixin, ListView):
         return queryset
 
 
+class WorkerDetailView(LoginRequiredMixin, DetailView):
+    model = User
+    context_object_name = "worker"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        worker = self.get_object()
+        context["completed_tasks_count"] = worker.tasks.filter(is_completed=True).count()
+        context["active_tasks_count"] = worker.tasks.filter(is_completed=False).count()
+        context["now"] = timezone.now()
+        return context
+
+
 class WorkerCreateView(CreateView):
     form_class = WorkerCreationForm
     template_name = "registration/signup.html"
