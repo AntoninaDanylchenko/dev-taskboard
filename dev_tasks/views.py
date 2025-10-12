@@ -1,13 +1,14 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.db.models import Q
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
 
-from dev_tasks.forms import WorkerCreationForm, TaskForm
+from dev_tasks.forms import WorkerCreationForm, TaskForm, SearchForm
 from dev_tasks.models import Task, Worker
 
 
@@ -49,11 +50,15 @@ class TaskListView(LoginRequiredMixin, ListView):
                 tasks = tasks.filter(is_completed=False, deadline__gte=timezone.now())
         if priority:
             tasks = tasks.filter(priority=priority)
+        form = SearchForm(self.request.GET)
+        if form.is_valid():
+            tasks = form.filter_queryset(tasks, "name", "description")
 
         return tasks
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context["search_form"] = SearchForm(initial={"query": self.request.GET.get("query", "")})
         context["now"] = timezone.now()
         return context
 
@@ -97,8 +102,19 @@ class TaskCreateView(LoginRequiredMixin, CreateView):
 class WorkerListView(LoginRequiredMixin, ListView):
     model = User
     context_object_name = "workers"
-    paginate_by = 10
+    paginate_by = 6
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["search_form"] = SearchForm(initial={"query": self.request.GET.get("query", "")})
+        return context
+
+    def get_queryset(self):
+        queryset = super().get_queryset().select_related("position")
+        form = SearchForm(self.request.GET)
+        if form.is_valid():
+            queryset = form.filter_queryset(queryset, "first_name", "last_name", "position__name")
+        return queryset
 
 
 class WorkerCreateView(CreateView):
