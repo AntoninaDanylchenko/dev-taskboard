@@ -6,6 +6,9 @@ from django.contrib.auth.forms import UserCreationForm
 from dev_tasks.models import Worker, Position, Task, TaskType
 
 
+User = get_user_model()
+
+
 class WorkerCreationForm(UserCreationForm):
     position = forms.ModelChoiceField(
         queryset=Position.objects.all(),
@@ -27,7 +30,7 @@ class WorkerCreationForm(UserCreationForm):
 
 class TaskForm(forms.ModelForm):
     assignees = forms.ModelMultipleChoiceField(
-        queryset=get_user_model().objects.all(),
+        queryset=User.objects.all(),
         widget=forms.CheckboxSelectMultiple,
         required=False,
     )
@@ -82,3 +85,9 @@ class SearchForm(forms.Form):
                 q_object |= Q(**{f"{field}__icontains": query})
             queryset = queryset.filter(q_object)
         return queryset
+
+
+class UpdateMeForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ["first_name", "last_name", "email", "position"]

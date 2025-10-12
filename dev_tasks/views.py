@@ -8,7 +8,7 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
 
-from dev_tasks.forms import WorkerCreationForm, TaskForm, SearchForm
+from dev_tasks.forms import WorkerCreationForm, TaskForm, SearchForm, UpdateMeForm
 from dev_tasks.models import Task, Worker
 
 
@@ -134,6 +134,19 @@ class AboutMeDetailView( WorkerDetailView):
     template_name = "dev_tasks/worker_detail.html"
     def get_object(self, queryset=None):
         return self.request.user
+
+
+class UpdateMeView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = User
+    form_class = UpdateMeForm
+    template_name = "dev_tasks/worker_form.html"
+    success_url = reverse_lazy("dev-tasks:about-me")
+
+    def get_object(self, queryset=None):
+        return self.request.user
+
+    def test_func(self):
+        return self.request.user == self.get_object()
 
 
 class WorkerCreateView(CreateView):

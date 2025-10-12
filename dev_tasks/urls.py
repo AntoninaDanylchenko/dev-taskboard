@@ -10,6 +10,7 @@ from dev_tasks.views import (index,
                              WorkerListView,
                              WorkerDetailView,
                              AboutMeDetailView,
+                             UpdateMeView,
                              WorkerCreateView)
 
 
@@ -24,6 +25,7 @@ urlpatterns = [
     path("workers/", WorkerListView.as_view(), name="workers-list"),
     path("workers/<int:pk>", WorkerDetailView.as_view(), name="worker-detail"),
     path("about-me/", AboutMeDetailView.as_view(), name="about-me"),
+    path("update-me/", UpdateMeView.as_view(), name="update-me"),
     path("signup/", WorkerCreateView.as_view(), name="signup"),
 ]
 

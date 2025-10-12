@@ -109,6 +109,13 @@
         </div>
       </div>
 
+      {% if request.user == worker %}
+        <div class="text-right mb-3">
+          <a href="{% url 'dev-tasks:update-me'%}" class="btn btn-outline-primary btn-sm">
+            <i class="fas fa-edit"></i> Edit My Info
+          </a>
+        </div>
+      {% endif %}
     </div>
   </section>
 </div>
