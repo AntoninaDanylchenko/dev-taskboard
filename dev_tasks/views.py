@@ -5,6 +5,7 @@ from django.urls import reverse_lazy
 from django.utils import timezone
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
+from django.views import View
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
 
 from dev_tasks.forms import WorkerCreationForm, TaskForm, SearchForm, UpdateMeForm
@@ -153,24 +154,26 @@ class WorkerCreateView(CreateView):
     template_name = "registration/signup.html"
     success_url = reverse_lazy("login")
 
-@login_required
-def toggle_assign_to_task(request, pk):
-    task = get_object_or_404(Task, pk=pk)
-    worker = request.user
 
-    if worker in task.assignees.all():
-        task.assignees.remove(worker)
-    else:
-        task.assignees.add(worker)
+class ToggleAssignToTaskView(LoginRequiredMixin, View):
+    def post(self, request, pk, *args, **kwargs):
+        task = get_object_or_404(Task, pk=pk)
+        worker = request.user  # same as Worker.objects.get(id=request.user.id)
 
-    return redirect("dev-tasks:task-detail", pk=pk)
+        if worker in task.assignees.all():
+            task.assignees.remove(worker)
+        else:
+            task.assignees.add(worker)
 
-@login_required
-def toggle_task_status(request, pk):
-    task = get_object_or_404(Task, pk=pk)
+        return redirect("dev-tasks:task-detail", pk=pk)
 
-    if request.user in task.assignees.all() or request.user.is_staff:
-        task.is_completed = not task.is_completed
-        task.save()
 
-    return redirect("dev-tasks:task-detail", pk=pk)
+class ToggleTaskStatusView(LoginRequiredMixin, View):
+    def post(self, request, pk, *args, **kwargs):
+        task = get_object_or_404(Task, pk=pk)
+
+        if request.user in task.assignees.all() or request.user.is_staff:
+            task.is_completed = not task.is_completed
+            task.save()
+
+        return redirect("dev-tasks:task-detail", pk=pk)
