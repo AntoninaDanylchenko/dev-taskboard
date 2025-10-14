@@ -1,11 +1,10 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.db.models import Q
 from django.urls import reverse_lazy
 from django.utils import timezone
-from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
 
 from dev_tasks.forms import WorkerCreationForm, TaskForm, SearchForm, UpdateMeForm
@@ -153,3 +152,15 @@ class WorkerCreateView(CreateView):
     form_class = WorkerCreationForm
     template_name = "registration/signup.html"
     success_url = reverse_lazy("login")
+
+@login_required
+def toggle_assign_to_task(request, pk):
+    task = get_object_or_404(Task, pk=pk)
+    worker = request.user
+
+    if worker in task.assignees.all():
+        task.assignees.remove(worker)
+    else:
+        task.assignees.add(worker)
+
+    return redirect("dev-tasks:task-detail", pk=pk)

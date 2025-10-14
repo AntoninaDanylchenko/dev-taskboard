@@ -6,7 +6,6 @@
 {% block content %}
 <div class="content-wrapper">
 
-  <!-- Page Header -->
   <section class="content-header">
     <div class="container-fluid">
       <div class="row mb-2">
@@ -22,7 +21,6 @@
     </div>
   </section>
 
-  <!-- Main content -->
   <section class="content">
     <div class="container-fluid">
       
@@ -76,12 +74,26 @@
         </div>
 
         {% if user in task.assignees.all %}
-        <div class="card-footer text-right">
-          <a href="#" class="btn btn-success">
-            <i class="fas fa-check"></i> Mark as Done
-          </a>
-        </div>
+          <div class="card-footer text-right">
+            <form action="{% url 'dev-tasks:toggle-task-assign' pk=task.id %}" method="post" class="d-inline">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-danger">
+                <i class="fas fa-user-minus"></i> Remove me
+              </button>
+            </form>
+          </div>
+
+        {% else %}
+          <div class="card-footer text-right">
+            <form action="{% url 'dev-tasks:toggle-task-assign' pk=task.id %}" method="post" class="d-inline">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-success">
+                <i class="fas fa-user-plus"></i> Assign me
+              </button>
+            </form>
+          </div>
         {% endif %}
+
         {% if user.is_superuser or user.is_staff %}
           <div class="card-footer text-right">
             <a href="{% url 'dev-tasks:task-update' pk=task.id %}" class="btn btn-primary btn-group-sm">
