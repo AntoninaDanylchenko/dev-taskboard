@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load crispy_forms_filters %}
+
+{% block title %}Update My Profile{% endblock %}
+
+{% block content %}
+<div class="content-wrapper">
+  <section class="content-header">
+    <div class="container-fluid">
+      <h1><i class="fas fa-user-edit"></i> Update My Profile</h1>
+    </div>
+  </section>
+
+  <section class="content">
+    <div class="container-fluid">
+      <div class="card card-outline card-primary shadow-sm">
+        <div class="card-body">
+          <form method="post">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-save"></i> Save Changes
+            </button>
+            <a href="{% url 'dev-tasks:about-me' %}" class="btn btn-outline-secondary">
+              Cancel
+            </a>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+{% endblock %}

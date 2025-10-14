@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load crispy_forms_filters %}
+{% load static %}
+
+{% block title %}
+  {{ object|yesno:"Update,Create" }} Task
+{% endblock %}
+
+{% block content %}
+<div class="content-wrapper">
+
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2 align-items-center">
+        <div class="col-sm-6">
+          <h1>
+            <i class="fas fa-clipboard-list"></i>
+            {{ object|yesno:"Update,Create" }} Task
+          </h1>
+        </div>
+        <div class="col-sm-6 text-right">
+          <a href="{% url "dev-tasks:tasks-list" %}" class="btn btn-outline-primary btn-sm">
+            <i class="fas fa-arrow-left"></i> Back to Tasks
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="content">
+    <div class="container-fluid">
+      <div class="card card-outline card-primary">
+        <div class="card-header">
+          <h3 class="card-title mb-0">
+            {% if object %}
+              <i class="fas fa-edit"></i> Update Task
+            {% else %}
+              <i class="fas fa-plus-circle"></i> Create New Task
+            {% endif %}
+          </h3>
+        </div>
+
+        <div class="card-body">
+          <form method="post" novalidate>
+            {% csrf_token %}
+            {{ form|crispy }}
+            <div class="text-right mt-4">
+              <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Save
+              </button>
+              <a href="{% url "dev-tasks:tasks-list" %}" class="btn btn-secondary">
+                <i class="fas fa-times"></i> Cancel
+              </a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+{% endblock %}
+
