@@ -12,7 +12,8 @@ from dev_tasks.views import (index,
                              AboutMeDetailView,
                              UpdateMeView,
                              WorkerCreateView,
-                             toggle_assign_to_task)
+                             toggle_assign_to_task,
+                             toggle_task_status)
 
 
 urlpatterns = [
@@ -23,6 +24,8 @@ urlpatterns = [
     path("tasks/<int:pk>/update/", TaskUpdateView.as_view(), name="task-update"),
     path("tasks/<int:pk>/delete/", TaskDeleteView.as_view(), name="task-delete"),
     path("tasks/<int:pk>/toggle-assign/", toggle_assign_to_task, name="toggle-task-assign"),
+    path("tasks/<int:pk>/toggle-status/", toggle_task_status, name="toggle-task-status"),
+
     path("tasks/create/", TaskCreateView.as_view(), name="task-create"),
     path("workers/", WorkerListView.as_view(), name="workers-list"),
     path("workers/<int:pk>", WorkerDetailView.as_view(), name="worker-detail"),

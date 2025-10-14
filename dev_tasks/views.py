@@ -164,3 +164,13 @@ def toggle_assign_to_task(request, pk):
         task.assignees.add(worker)
 
     return redirect("dev-tasks:task-detail", pk=pk)
+
+@login_required
+def toggle_task_status(request, pk):
+    task = get_object_or_404(Task, pk=pk)
+
+    if request.user in task.assignees.all() or request.user.is_staff:
+        task.is_completed = not task.is_completed
+        task.save()
+
+    return redirect("dev-tasks:task-detail", pk=pk)
