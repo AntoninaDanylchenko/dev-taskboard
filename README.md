@@ -3,6 +3,11 @@
 A simple yet functional task management system built with **Django** and styled using **AdminLTE**.  
 The project simulates the workflow of an IT company, allowing developers, designers, project managers, and QA specialists to create, assign, and track tasks.
 
+https://dev-taskboard.onrender.com/
+
+login: user
+password: user12345
+
 ---
 
 ## 🚀 Features
@@ -38,6 +43,7 @@ The project simulates the workflow of an IT company, allowing developers, design
 - **Worker (custom user)** — extends Django `AbstractUser`, adds position.  
 - **TaskType** — category of the task (e.g., Backend, Design, Testing).  
 - **Task** — main model representing each task, linked to `TaskType` and `Worker`.
+
 
 
 
