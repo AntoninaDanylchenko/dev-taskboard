@@ -1,0 +1,19 @@
+{% extends "dev_tasks/task_list.html" %}
+
+{% block title %}My Tasks{% endblock %}
+{% block content %}
+  {{ block.super }}
+  {% block content-header %}
+    
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1><i class="fas fa-user-check"></i> My Tasks</h1>
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endblock %}
+  
+{% endblock %}
